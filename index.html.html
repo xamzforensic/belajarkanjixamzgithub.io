@@ -1,0 +1,1506 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Xamz Japanese Learning - Enhanced</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;700&display=swap" rel="stylesheet">
+    <style>
+        /* General Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            /* Peningkatan Rendering Font */
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            text-rendering: optimizeLegibility;
+        }
+        
+        body {
+            font-family: 'Noto Sans JP', sans-serif;
+            background: linear-gradient(135deg, #ff6b9d, #c44569, #f8b500); /* Warm, inviting gradient */
+            min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
+            color: #333;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            /* Optimasi Animasi Latar Belakang */
+            will-change: transform, opacity;
+        }
+
+        /* Background Animations */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            /* SVG yang lebih kompleks untuk detail yang lebih baik */
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200"><defs><filter id="f1" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur in="SourceGraphic" stdDeviation="3" /></filter></defs><g opacity="0.15" filter="url(#f1)"><path d="M20 30 L35 20 L50 30 L35 40 Z" fill="pink"/><path d="M120 60 L130 50 L140 60 L130 70 Z" fill="white"/><path d="M60 120 L70 110 L80 120 L70 130 Z" fill="pink"/><path d="M150 150 L160 140 L170 150 L160 160 Z" fill="white"/><circle cx="40" cy="80" r="4" fill="pink"/><circle cx="160" cy="40" r="3" fill="white"/><circle cx="180" cy="180" r="5" fill="pink"/><path d="M100 20 Q110 10 120 20 Q110 30 100 20" fill="pink"/><path d="M30 170 Q40 160 50 170 Q40 180 30 170" fill="white"/></g></svg>');
+            animation: sakuraFloat 30s cubic-bezier(0.4, 0, 0.2, 1) infinite; /* Timing function lebih smooth */
+            pointer-events: none;
+            z-index: 0;
+            will-change: transform; /* Optimasi animasi */
+        }
+        
+        body::after {
+            content: '';
+            position: fixed;
+            top: 0;
+            right: 0;
+            width: 350px; /* Ukuran sedikit lebih besar */
+            height: 350px;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="50" cy="50" r="45" fill="none" stroke="rgba(255,255,255,0.12)" stroke-width="2.5"/><circle cx="50" cy="50" r="35" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="1.5"/><circle cx="50" cy="50" r="25" fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="1"/><circle cx="50" cy="50" r="15" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="0.8"/><circle cx="50" cy="50" r="3" fill="rgba(255,255,255,0.25)"/></svg>');
+            animation: rotate 40s linear infinite; /* Durasi lebih panjang */
+            pointer-events: none;
+            z-index: 0;
+            will-change: transform; /* Optimasi animasi */
+        }
+
+        /* Loading Screen Styles */
+        .loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #ff6b9d, #c44569, #f8b500);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1), visibility 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .loading-screen.hidden {
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        .loading-content {
+            text-align: center;
+            color: white;
+            position: relative;
+        }
+
+        .loading-logo {
+            font-size: 4.5em; /* Sedikit lebih besar */
+            margin-bottom: 25px;
+            animation: float 3s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+            will-change: transform;
+        }
+
+        .loading-title {
+            font-size: 2.8em; /* Sedikit lebih besar */
+            font-weight: 700;
+            margin-bottom: 12px;
+            text-shadow: 0 0 15px rgba(255, 255, 255, 0.6), 0 0 5px rgba(0, 0, 0, 0.4); /* Glow lebih kuat */
+            animation: glow 2s cubic-bezier(0.4, 0, 0.2, 1) infinite alternate;
+            will-change: text-shadow;
+        }
+
+        .loading-subtitle {
+            font-size: 1.3em; /* Sedikit lebih besar */
+            margin-bottom: 45px;
+            opacity: 0.9;
+            animation: fadeInOut 2s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+            will-change: opacity;
+        }
+
+        /* Animated Kanji Characters */
+        .floating-kanji {
+            position: absolute;
+            font-size: 2.2em; /* Sedikit lebih besar */
+            color: rgba(255, 255, 255, 0.35); /* Sedikit lebih terang */
+            animation: floatKanji 8s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+            pointer-events: none;
+            will-change: transform, opacity;
+        }
+
+        .floating-kanji:nth-child(1) { top: 10%; left: 10%; animation-delay: 0s; }
+        .floating-kanji:nth-child(2) { top: 20%; right: 15%; animation-delay: 1s; }
+        .floating-kanji:nth-child(3) { bottom: 30%; left: 20%; animation-delay: 2s; }
+        .floating-kanji:nth-child(4) { bottom: 20%; right: 10%; animation-delay: 3s; }
+        .floating-kanji:nth-child(5) { top: 50%; left: 5%; animation-delay: 4s; }
+        .floating-kanji:nth-child(6) { top: 40%; right: 5%; animation-delay: 5s; }
+
+        /* Loading Spinner */
+        .loading-spinner {
+            width: 90px; /* Sedikit lebih besar */
+            height: 90px;
+            border: 5px solid rgba(255, 255, 255, 0.3);
+            border-top: 5px solid white;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 25px auto;
+            position: relative;
+            will-change: transform;
+        }
+
+        .loading-spinner::after {
+            content: '⛩️';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 1.8em; /* Sedikit lebih besar */
+            animation: pulse 2s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+            will-change: transform;
+        }
+
+        /* Progress Bar */
+        .progress-container {
+            width: 320px; /* Sedikit lebih lebar */
+            height: 8px; /* Sedikit lebih tebal */
+            background: rgba(255, 255, 255, 0.25);
+            border-radius: 4px;
+            overflow: hidden;
+            margin: 25px auto;
+            position: relative;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #ffffff, #f8b500, #ffffff);
+            border-radius: 4px;
+            width: 0%;
+            animation: progressFill 3s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+            position: relative;
+            will-change: width;
+        }
+
+        .progress-bar::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 100%;
+            width: 40px; /* Shimmer lebih lebar */
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.9), transparent); /* Lebih terang */
+            animation: shimmer 1.5s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+            will-change: left;
+        }
+
+        .loading-text {
+            font-size: 1.1em; /* Sedikit lebih besar */
+            margin-top: 18px;
+            opacity: 0.85;
+            animation: dots 1.5s steps(4, end) infinite; /* Steps untuk dots */
+        }
+
+        /* Sakura Petals Animation */
+        .sakura-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            overflow: hidden;
+        }
+
+        .sakura-petal {
+            position: absolute;
+            font-size: 1.8em; /* Lebih besar */
+            color: rgba(255, 182, 193, 0.8); /* Lebih solid */
+            animation: sakuraFall 8s linear infinite;
+            will-change: transform, opacity;
+        }
+
+        .sakura-petal:nth-child(1) { left: 10%; animation-delay: 0s; animation-duration: 8s; }
+        .sakura-petal:nth-child(2) { left: 20%; animation-delay: 2s; animation-duration: 10s; }
+        .sakura-petal:nth-child(3) { left: 30%; animation-delay: 4s; animation-duration: 7s; }
+        .sakura-petal:nth-child(4) { left: 40%; animation-delay: 1s; animation-duration: 9s; }
+        .sakura-petal:nth-child(5) { left: 50%; animation-delay: 3s; animation-duration: 11s; }
+        .sakura-petal:nth-child(6) { left: 60%; animation-delay: 5s; animation-duration: 8s; }
+        .sakura-petal:nth-child(7) { left: 70%; animation-delay: 6s; animation-duration: 10s; }
+        .sakura-petal:nth-child(8) { left: 80%; animation-delay: 2.5s; animation-duration: 9s; }
+        .sakura-petal:nth-child(9) { left: 90%; animation-delay: 4.5s; animation-duration: 7s; }
+
+        /* Keyframe Animations */
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-25px) rotate(12deg); } /* Gerakan lebih besar */
+        }
+
+        @keyframes glow {
+            0% { text-shadow: 0 0 10px rgba(255, 255, 255, 0.4), 0 0 3px rgba(0, 0, 0, 0.2); }
+            100% { text-shadow: 0 0 25px rgba(255, 255, 255, 0.8), 0 0 8px rgba(0, 0, 0, 0.4); } /* Glow lebih intens */
+        }
+
+        @keyframes fadeInOut {
+            0%, 100% { opacity: 0.9; }
+            50% { opacity: 0.5; } /* Kontras lebih tinggi */
+        }
+
+        @keyframes floatKanji {
+            0%, 100% { transform: translateY(0px) rotate(0deg); opacity: 0.35; }
+            25% { transform: translateY(-20px) rotate(7deg); opacity: 0.7; } /* Gerakan dan opacity lebih dinamis */
+            50% { transform: translateY(-35px) rotate(-7deg); opacity: 0.35; }
+            75% { transform: translateY(-15px) rotate(5deg); opacity: 0.6; }
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: translate(-50%, -50%) scale(1); }
+            50% { transform: translate(-50%, -50%) scale(1.15); } /* Pulse lebih kuat */
+        }
+
+        @keyframes progressFill {
+            0% { width: 0%; }
+            100% { width: 100%; }
+        }
+
+        @keyframes shimmer {
+            0% { left: -40px; } /* Sesuai lebar shimmer */
+            100% { left: 100%; }
+        }
+
+        @keyframes dots {
+            0%, 25% { content: 'Loading'; }
+            50% { content: 'Loading.'; }
+            75% { content: 'Loading..'; }
+            100% { content: 'Loading...'; }
+        }
+
+        @keyframes sakuraFall {
+            0% {
+                transform: translateY(-100px) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(100vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+        
+        @keyframes sakuraFloat {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            25% { transform: translateY(-20px) rotate(90deg); }
+            50% { transform: translateY(-40px) rotate(180deg); }
+            75% { transform: translateY(-20px) rotate(270deg); }
+        }
+        
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        
+        @keyframes correctPulse {
+            0% { transform: scale(1); background: #28a745; } /* Warna langsung saat mulai */
+            50% { transform: scale(1.15); background: #28a745; } /* Skala lebih besar */
+            100% { transform: scale(1); background: #28a745; }
+        }
+        
+        @keyframes incorrectShake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-15px); } /* Guncangan lebih kuat */
+            75% { transform: translateX(15px); }
+        }
+        
+        @keyframes pointsAnimation {
+            0% { transform: translateY(0) scale(1); opacity: 1; }
+            100% { transform: translateY(-60px) scale(1.8); opacity: 0; } /* Gerakan dan skala lebih besar */
+        }
+        
+        @keyframes levelUp {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.15); } /* Skala lebih besar */
+            100% { transform: scale(1); }
+        }
+        
+        @keyframes sparkle {
+            0%, 100% { transform: scale(0) rotate(0deg); opacity: 0; }
+            50% { transform: scale(1.2) rotate(180deg); opacity: 1; } /* Sparkle lebih besar */
+        }
+        
+        /* Main Content Layout */
+        .container {
+            max-width: 1280px; /* Lebih lebar */
+            margin: 30px auto; /* Margin lebih besar */
+            padding: 30px;
+            position: relative;
+            z-index: 1;
+            width: 95%;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 40px; /* Margin lebih besar */
+            background: rgba(255, 255, 255, 0.98); /* Lebih opaque */
+            padding: 40px; /* Padding lebih besar */
+            border-radius: 25px; /* Lebih rounded */
+            box-shadow: 0 20px 45px rgba(0, 0, 0, 0.15); /* Shadow lebih kuat */
+            backdrop-filter: blur(15px); /* Blur lebih kuat */
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .header::before, .header::after {
+            content: '🌸';
+            position: absolute;
+            font-size: 2.5em; /* Lebih besar */
+            pointer-events: none;
+            will-change: transform, opacity;
+        }
+        
+        .header::before {
+            top: 15px;
+            left: 25px;
+            animation: sparkle 3s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+        }
+        
+        .header::after {
+            top: 15px;
+            right: 25px;
+            animation: sparkle 3s cubic-bezier(0.4, 0, 0.2, 1) infinite 1.5s;
+        }
+        
+        .header h1 {
+            font-size: 3.2em; /* Lebih besar */
+            color: #c44569;
+            margin-bottom: 15px;
+            text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.15); /* Shadow lebih kuat */
+            background: linear-gradient(45deg, #ff6b9d, #c44569);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-weight: 700;
+        }
+        
+        .header p {
+            color: #555; /* Lebih gelap untuk kontras */
+            font-size: 1.3em; /* Lebih besar */
+            line-height: 1.6;
+        }
+        
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 20px; /* Jarak lebih besar */
+            margin-bottom: 40px;
+            flex-wrap: wrap;
+        }
+        
+        .btn {
+            background: linear-gradient(45deg, #0d10c9, #c44569);
+            color: white;
+            border: none;
+            padding: 15px 30px; /* Padding lebih besar */
+            border-radius: 30px; /* Lebih rounded */
+            font-size: 17px; /* Lebih besar */
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); /* Timing function lebih smooth */
+            box-shadow: 0 8px 20px rgba(10, 1, 4, 0.35); /* Shadow lebih kuat */
+            font-weight: 600; /* Lebih tebal */
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+            min-width: 160px; /* Ukuran konsisten */
+            will-change: transform, box-shadow;
+        }
+        
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: rgba(252, 228, 20, 0.3); /* Ripple lebih solid */
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            transition: width 0.7s cubic-bezier(0.4, 0, 0.2, 1), height 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: -1;
+        }
+        
+        .btn:hover::before {
+            width: 350px; /* Ripple lebih besar */
+            height: 350px;
+        }
+        
+        .btn:hover {
+            transform: translateY(-5px); /* Lift lebih tinggi */
+            box-shadow: 0 15px 35px rgba(255, 107, 157, 0.5); /* Shadow lebih kuat */
+        }
+        
+        .btn:active {
+            transform: translateY(0);
+            box-shadow: 0 8px 20px rgba(10, 1, 4, 0.35);
+        }
+
+        .btn.reset-btn {
+            background: linear-gradient(45deg, #dc3545, #ff8c00);
+        }
+        .btn.reset-btn:hover {
+            box-shadow: 0 15px 35px rgba(220, 53, 69, 0.5);
+        }
+        
+        .points-system {
+            display: flex;
+            justify-content: center;
+            gap: 25px; /* Jarak lebih besar */
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+        
+        .points-display {
+            background: rgba(83, 255, 3, 0.95); /* Lebih opaque */
+            padding: 18px 30px; /* Padding lebih besar */
+            border-radius: 25px; /* Lebih rounded */
+            text-align: center;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15); /* Shadow lebih kuat */
+            min-width: 150px; /* Lebih lebar */
+            position: relative;
+            overflow: hidden;
+            border: 2px solid rgba(255, 255, 255, 0.4); /* Border lebih terlihat */
+            will-change: transform, box-shadow;
+        }
+        
+        .points-number {
+            font-size: 2em; /* Lebih besar */
+            font-weight: 700;
+            color: #ffffff;
+            margin-bottom: 8px;
+            text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.3); /* Shadow lebih kuat */
+        }
+        
+        .points-label {
+            color: #eee;
+            font-size: 1.1em; /* Lebih besar */
+            text-transform: uppercase;
+            letter-spacing: 2px; /* Spacing lebih besar */
+        }
+        
+        .level-display {
+            background: linear-gradient(45deg, #f8b500, #ff6b9d);
+            color: white;
+            padding: 12px 30px; /* Padding disesuaikan */
+            border-radius: 30px;
+            font-weight: 700;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 150px;
+            border: 2px solid rgba(255, 255, 255, 0.4);
+            will-change: transform, box-shadow;
+        }
+
+        .level-display.level-up-animation {
+            animation: levelUp 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .points-animation {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 1.6em; /* Lebih besar */
+            font-weight: 700;
+            color: #28a745;
+            animation: pointsAnimation 1s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+            pointer-events: none;
+            z-index: 10;
+            white-space: nowrap;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2); /* Shadow lebih kuat */
+            will-change: transform, opacity;
+        }
+        
+        .points-animation.negative {
+            color: #dc3545;
+        }
+        
+        .kanji-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); /* Kartu lebih besar */
+            gap: 30px; /* Jarak lebih besar */
+            margin-bottom: 40px;
+        }
+        
+        .kanji-card {
+            background: rgba(255, 255, 255, 0.99); /* Hampir opaque */
+            border-radius: 20px; /* Lebih rounded */
+            padding: 30px; /* Padding lebih besar */
+            text-align: center;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.18); /* Shadow lebih kuat */
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
+            backdrop-filter: blur(15px); /* Blur lebih kuat */
+            border: 2px solid rgba(255, 255, 255, 0.5); /* Border lebih terlihat */
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            will-change: transform, box-shadow, border-color;
+        }
+        
+        .kanji-card:hover {
+            transform: translateY(-10px) scale(1.04); /* Lift dan skala lebih besar */
+            box-shadow: 0 25px 55px rgba(0, 0, 0, 0.25); /* Shadow lebih kuat */
+            border-color: #ff6b9d;
+        }
+        
+        .kanji-character {
+            font-size: 5em; /* Lebih besar */
+            font-weight: 700;
+            color: #c44569;
+            margin-bottom: 12px;
+            text-shadow: 4px 4px 8px rgba(0, 0, 0, 0.2); /* Shadow lebih kuat */
+        }
+        
+        .kanji-reading {
+            font-size: 1.4em; /* Lebih besar */
+            color: #444; /* Lebih gelap */
+            margin-bottom: 10px;
+            font-weight: 500;
+        }
+        
+        .kanji-meaning {
+            font-size: 1.3em; /* Lebih besar */
+            color: #222; /* Lebih gelap */
+            font-weight: 400;
+            line-height: 1.5;
+        }
+        
+        .quiz-mode {
+            background: rgba(255, 255, 255, 0.99); /* Hampir opaque */
+            border-radius: 30px; /* Lebih rounded */
+            padding: 40px; /* Padding lebih besar */
+            text-align: center;
+            box-shadow: 0 20px 45px rgba(0, 0, 0, 0.2); /* Shadow lebih kuat */
+            backdrop-filter: blur(15px); /* Blur lebih kuat */
+            display: none;
+            border: 2px solid rgba(255, 255, 255, 0.5);
+        }
+        
+        .quiz-kanji {
+            font-size: 8em; /* Lebih besar */
+            color: #c44569;
+            margin-bottom: 30px;
+            text-shadow: 4px 4px 8px rgba(0, 0, 0, 0.2);
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            will-change: transform, background;
+        }
+        
+        .quiz-kanji.correct {
+            animation: correctPulse 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .quiz-kanji.incorrect {
+            animation: incorrectShake 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .quiz-options {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); /* Konsisten dengan kartu kanji */
+            gap: 25px; /* Jarak lebih besar */
+            margin: 30px 0;
+        }
+        
+        .option-btn {
+            background: rgba(255, 255, 255, 0.95); /* Lebih opaque */
+            border: 2px solid #ff6b9d;
+            color: #c44569;
+            padding: 20px 30px; /* Padding lebih besar */
+            border-radius: 20px; /* Lebih rounded */
+            font-size: 19px; /* Lebih besar */
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            font-weight: 600;
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1); /* Shadow lebih kuat */
+            will-change: transform, background, color, box-shadow;
+        }
+        
+        .option-btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: rgba(255, 255, 255, 0.4); /* Ripple lebih solid */
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1), height 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: -1;
+        }
+        
+        .option-btn:hover::before {
+            width: 280px; /* Ripple lebih besar */
+            height: 280px;
+        }
+        
+        .option-btn:hover {
+            background: #c44569;
+            color: white;
+            transform: translateY(-4px); /* Lift lebih tinggi */
+            box-shadow: 0 10px 25px rgba(255, 107, 157, 0.4);
+        }
+        
+        .option-btn.correct {
+            background: #28a745;
+            border-color: #28a745;
+            color: white;
+            animation: correctPulse 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 0 25px rgba(40, 167, 69, 0.6); /* Glow lebih kuat */
+        }
+        
+        .option-btn.incorrect {
+            background: #dc3545;
+            border-color: #dc3545;
+            color: white;
+            animation: incorrectShake 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 0 25px rgba(220, 53, 69, 0.6); /* Glow lebih kuat */
+        }
+        
+        .score {
+            font-size: 1.5em; /* Lebih besar */
+            margin-bottom: 25px;
+            color: #333;
+            font-weight: 600;
+        }
+        
+        .search-box {
+            width: 100%;
+            max-width: 500px; /* Lebih lebar */
+            padding: 18px 25px; /* Padding lebih besar */
+            border: 2px solid #ff6b9d;
+            border-radius: 35px; /* Lebih rounded */
+            font-size: 18px; /* Lebih besar */
+            margin-bottom: 30px;
+            background: rgba(255, 255, 255, 0.98); /* Lebih opaque */
+            backdrop-filter: blur(10px); /* Blur lebih kuat */
+            color: #333;
+            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
+        }
+        
+        .search-box:focus {
+            outline: none;
+            border-color: #c44569;
+            box-shadow: 0 0 25px rgba(255, 107, 157, 0.5); /* Glow lebih kuat */
+        }
+        
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); /* Kartu stat lebih besar */
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+        
+        .stat-card {
+            background: rgba(255, 255, 255, 0.98);
+            padding: 30px; /* Padding lebih besar */
+            border-radius: 20px;
+            text-align: center;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.12);
+            border: 2px solid rgba(255, 255, 255, 0.5);
+        }
+        
+        .stat-number {
+            font-size: 2.8em; /* Lebih besar */
+            font-weight: 700;
+            color: #c44569;
+            margin-bottom: 10px;
+            text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.2);
+        }
+        
+        .stat-label {
+            color: #555;
+            font-size: 1.1em; /* Lebih besar */
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+        }
+
+        /* Responsive Adjustments */
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2.5em;
+            }
+            
+            .kanji-character {
+                font-size: 4em;
+            }
+            
+            .quiz-kanji {
+                font-size: 6em;
+            }
+            
+            .kanji-grid {
+                grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+                gap: 20px;
+            }
+
+            .loading-title {
+                font-size: 2.2em;
+            }
+
+            .loading-logo {
+                font-size: 3.5em;
+            }
+
+            .progress-container {
+                width: 280px;
+            }
+
+            .btn {
+                padding: 12px 25px;
+                font-size: 15px;
+                min-width: 130px;
+            }
+
+            .points-display {
+                padding: 15px 25px;
+                min-width: 120px;
+            }
+
+            .points-number {
+                font-size: 1.8em;
+            }
+
+            .points-label {
+                font-size: 1em;
+            }
+
+            .option-btn {
+                font-size: 17px;
+                padding: 18px 25px;
+            }
+
+            .stats {
+                grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+                gap: 20px;
+            }
+            .stat-number {
+                font-size: 2.2em;
+            }
+            .stat-label {
+                font-size: 1em;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .header h1 {
+                font-size: 2em;
+            }
+            .header p {
+                font-size: 1.1em;
+            }
+            .controls {
+                flex-direction: column;
+                align-items: center;
+                gap: 15px;
+            }
+            .btn {
+                width: 90%;
+                max-width: 280px;
+            }
+            .points-system {
+                flex-direction: column;
+                align-items: center;
+                gap: 15px;
+            }
+            .points-display, .level-display {
+                width: 90%;
+                max-width: 280px;
+            }
+            .search-box {
+                width: 90%;
+            }
+            .kanji-grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            .kanji-character {
+                font-size: 3.5em;
+            }
+            .kanji-reading, .kanji-meaning {
+                font-size: 1.2em;
+            }
+            .quiz-kanji {
+                font-size: 5em;
+            }
+            .quiz-options {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+            .option-btn {
+                width: 90%;
+                margin: 0 auto;
+            }
+            .stats {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Loading Screen -->
+    <div class="loading-screen" id="loadingScreen">
+        <div class="sakura-container">
+            <div class="sakura-petal">🌸</div>
+            <div class="sakura-petal">🌸</div>
+            <div class="sakura-petal">🌸</div>
+            <div class="sakura-petal">🌸</div>
+            <div class="sakura-petal">🌸</div>
+            <div class="sakura-petal">🌸</div>
+            <div class="sakura-petal">🌸</div>
+            <div class="sakura-petal">🌸</div>
+            <div class="sakura-petal">🌸</div>
+        </div>
+        
+        <div class="floating-kanji">日</div>
+        <div class="floating-kanji">月</div>
+        <div class="floating-kanji">水</div>
+        <div class="floating-kanji">火</div>
+        <div class="floating-kanji">愛</div>
+        <div class="floating-kanji">心</div>
+        
+        <div class="loading-content">
+            <div class="loading-logo">⛩️</div>
+            <div class="loading-title">Xamz Japanese</div>
+            <div class="loading-subtitle">学習の準備中...</div>
+            
+            <div class="loading-spinner"></div>
+            
+            <div class="progress-container">
+                <div class="progress-bar"></div>
+            </div>
+            
+            <div class="loading-text">Loading...</div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="container">
+        <header class="header">
+            <h1>⛩️ Xamz Learning Japanese ⛩️</h1>
+            <p>Pelajari 100+ kanji dasar dengan mudah dan interaktif!</p>
+        </header>
+        
+        <input type="text" class="search-box" id="searchBox" placeholder="🔍 Cari kanji berdasarkan arti atau bacaan..." aria-label="Cari kanji">
+        
+        <section class="points-system" id="pointsSystem">
+            <div class="points-display">
+                <div class="points-number" id="totalPoints">0</div>
+                <div class="points-label">Total Poin</div>
+            </div>
+            <div class="points-display">
+                <div class="points-number" id="currentStreak">0</div>
+                <div class="points-label">Streak</div>
+            </div>
+            <div class="points-display level-display">
+                <div id="playerLevel">Level 1</div>
+            </div>
+        </section>
+        
+        <nav class="controls">
+            <button class="btn" id="showAllKanjiBtn"> Semua Kanji</button>
+            <button class="btn" id="startQuizBtn"> Kuis Pilihan Ganda</button>
+            <button class="btn" id="startTypingQuizBtn"> Kuis Mengetik</button>
+            <button class="btn" id="showStatsBtn">Statistik</button>
+            <button class="btn reset-btn" id="resetProgressBtn">Reset Progres</button>
+        </nav>
+        
+        <section class="stats" id="stats" style="display: none;">
+            <div class="stat-card">
+                <div class="stat-number" id="totalKanji">0</div>
+                <div class="stat-label">Total Kanji</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="correctAnswers">0</div>
+                <div class="stat-label">Jawaban Benar</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="totalQuizzes">0</div>
+                <div class="stat-label">Total Kuis Selesai</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="totalPoints2">0</div>
+                <div class="stat-label">Total Poin Akumulasi</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="maxStreak">0</div>
+                <div class="stat-label">Streak Terbaik</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="accuracy">0%</div>
+                <div class="stat-label">Akurasi Kuis</div>
+            </div>
+        </section>
+        
+        <section class="kanji-grid" id="kanjiGrid"></section>
+        
+        <section class="quiz-mode" id="quizMode">
+            <div class="score" id="quizScore">Skor: 0/0</div>
+            <div class="quiz-kanji" id="quizKanji"></div>
+            <input type="text" id="answerInput" class="search-box" placeholder="Ketik arti atau bacaan di sini..." style="display: none;">
+            <div class="quiz-options" id="quizOptions"></div>
+            <button class="btn" id="submitAnswerBtn" style="margin-top: 20px; display: none;">Kirim Jawaban</button>
+            <button class="btn" id="nextBtn" style="margin-top: 20px; display: none;">➡️ Pertanyaan Berikutnya</button>
+            <button class="btn" id="quizEndBtn" style="margin-top: 20px; display: none;">🏯 Kembali ke Daftar</button>
+        </section>
+    </div>
+
+    <script>
+        const kanjiData = [
+            {char: '下', reading: 'か / げ', meaning: 'bawah / turun'},
+            {char: '左', reading: 'ひだり / さ', meaning: 'kiri'},
+            {char: '右', reading: 'みぎ / う', meaning: 'kanan'},
+            {char: '上', reading: 'うえ / じょう', meaning: 'atas / naik'},
+            {char: '私', reading: 'わたし / あたし', meaning: 'saya / aku'},
+            {char: '人', reading: 'ひと / にん', meaning: 'orang'},
+            {char: '日', reading: 'ひ / にち', meaning: 'hari / matahari'},
+            {char: '月', reading: 'つき / げつ', meaning: 'bulan'},
+            {char: '年', reading: 'とし / ねん', meaning: 'tahun'},
+            {char: '時', reading: 'じ / とき', meaning: 'waktu'},
+            {char: '水', reading: 'みず / すい', meaning: 'air'},
+            {char: '火', reading: 'ひ / か', meaning: 'api'},
+            {char: '木', reading: 'き / もく', meaning: 'pohon / kayu'},
+            {char: '金', reading: 'きん / かね', meaning: 'emas / uang'},
+            {char: '土', reading: 'つち / ど', meaning: 'tanah'},
+            {char: '山', reading: 'やま / さん', meaning: 'gunung'},
+            {char: '川', reading: 'かわ / せん', meaning: 'sungai'},
+            {char: '海', reading: 'うみ / かい', meaning: 'laut'},
+            {char: '空', reading: 'そら / くう', meaning: 'langit'},
+            {char: '雨', reading: 'あめ / う', meaning: 'hujan'},
+            {char: '雪', reading: 'ゆき / せつ', meaning: 'salju'},
+            {char: '風', reading: 'かぜ / ふう', meaning: 'angin'},
+            {char: '花', reading: 'はな / か', meaning: 'bunga'},
+            {char: '草', reading: 'くさ / そう', meaning: 'rumput'},
+            {char: '犬', reading: 'いぬ / けん', meaning: 'anjing'},
+            {char: '猫', reading: 'ねこ / びょう', meaning: 'kucing'},
+            {char: '鳥', reading: 'とり / ちょう', meaning: 'burung'},
+            {char: '魚', reading: 'さかな / ぎょ', meaning: 'ikan'},
+            {char: '肉', reading: 'にく', meaning: 'daging'},
+            {char: '米', reading: 'こめ / べい', meaning: 'beras'},
+            {char: '食', reading: 'しょく / た', meaning: 'makanan / makan'},
+            {char: '飲', reading: 'の / いん', meaning: 'minum'},
+            {char: '家', reading: 'いえ / か', meaning: 'rumah'},
+            {char: '車', reading: 'くるま / しゃ', meaning: 'mobil'},
+            {char: '電', reading: 'でん', meaning: 'listrik'},
+            {char: '話', reading: 'はなし / わ', meaning: 'bicara / cerita'},
+            {char: '言', reading: 'い / げん', meaning: 'berkata'},
+            {char: '聞', reading: 'き / ぶん', meaning: 'mendengar'},
+            {char: '見', reading: 'み / けん', meaning: 'melihat'},
+            {char: '読', reading: 'よ / どく', meaning: 'membaca'},
+            {char: '書', reading: 'か / しょ', meaning: 'menulis'},
+            {char: '学', reading: 'がく / まな', meaning: 'belajar'},
+            {char: '校', reading: 'こう', meaning: 'sekolah'},
+            {char: '生', reading: 'せい / い', meaning: 'kehidupan / siswa'},
+            {char: '先', reading: 'せん / さき', meaning: 'dulu / guru'},
+            {char: '友', reading: 'とも / ゆう', meaning: 'teman'},
+            {char: '愛', reading: 'あい', meaning: 'cinta'},
+            {char: '心', reading: 'こころ / しん', meaning: 'hati'},
+            {char: '手', reading: 'て / しゅ', meaning: 'tangan'},
+            {char: '足', reading: 'あし / そく', meaning: 'kaki'},
+            {char: '頭', reading: 'あたま / とう', meaning: 'kepala'},
+            {char: '目', reading: 'め / もく', meaning: 'mata'},
+            {char: '耳', reading: 'みみ / じ', meaning: 'telinga'},
+            {char: '口', reading: 'くち / こう', meaning: 'mulut'},
+            {char: '大', reading: 'おお / だい', meaning: 'besar'},
+            {char: '小', reading: 'ちい / しょう', meaning: 'kecil'},
+            {char: '新', reading: 'あたら / しん', meaning: 'baru'},
+            {char: '古', reading: 'ふる / こ', meaning: 'lama'},
+            {char: '中', reading: 'なか / ちゅう', meaning: 'tengah'},
+            {char: '外', reading: 'そと / がい', meaning: 'luar'},
+            {char: '内', reading: 'うち / ない', meaning: 'dalam'},
+            {char: '前', reading: 'まえ / ぜん', meaning: 'depan'},
+            {char: '後', reading: 'あと / ご', meaning: 'belakang'},
+            {char: '東', reading: 'ひがし / とう', meaning: 'timur'},
+            {char: '西', reading: 'にし / せい', meaning: 'barat'},
+            {char: '南', reading: 'みなみ / なん', meaning: 'selatan'},
+            {char: '北', reading: 'きた / ほく', meaning: 'utara'},
+            {char: '本', reading: 'ほん / もと', meaning: 'buku / asal'},
+            {char: '出', reading: 'で / しゅつ', meaning: 'keluar'},
+            {char: '入', reading: 'はい / にゅう', meaning: 'masuk'},
+            {char: '立', reading: 'た / りつ', meaning: 'berdiri'},
+            {char: '座', reading: 'すわ / ざ', meaning: 'duduk'},
+            {char: '行', reading: 'い / こう', meaning: 'pergi'},
+            {char: '来', reading: 'く / らい', meaning: 'datang'},
+            {char: '休', reading: 'やす / きゅう', meaning: 'istirahat'},
+            {char: '名', reading: 'な / めい', meaning: 'nama'},
+            {char: '国', reading: 'くに / こく', meaning: 'negara'},
+            {char: '円', reading: 'えん / まる', meaning: 'yen / lingkaran'},
+            {char: '店', reading: 'みせ / てん', meaning: 'toko'},
+            {char: '買', reading: 'か / ばい', meaning: 'membeli'},
+            {char: '売', reading: 'う / ばい', meaning: 'menjual'},
+            {char: '高', reading: 'たか / こう', meaning: 'tinggi / mahal'},
+            {char: '安', reading: 'やす / あん', meaning: 'murah / aman'},
+            {char: '長', reading: 'なが / ちょう', meaning: 'panjang / kepala'},
+            {char: '短', reading: 'みじか / たん', meaning: 'pendek'},
+            {char: '多', reading: 'おお / た', meaning: 'banyak'},
+            {char: '少', reading: 'すく / しょう', meaning: 'sedikit'},
+            {char: '早', reading: 'はや / そう', meaning: 'cepat / awal'},
+            {char: '遅', reading: 'おそ / ち', meaning: 'lambat / terlambat'},
+            {char: '明', reading: 'あか / めい', meaning: 'terang / jelas'},
+            {char: '暗', reading: 'くら / あん', meaning: 'gelap'},
+            {char: '強', reading: 'つよ / きょう', meaning: 'kuat'},
+            {char: '弱', reading: 'よわ / じゃく', meaning: 'lemah'},
+            {char: '男', reading: 'おとこ / だん', meaning: 'pria'},
+            {char: '女', reading: 'おんな / じょ', meaning: 'wanita'},
+            {char: '子', reading: 'こ / し', meaning: 'anak'},
+            {char: '母', reading: 'はは / ぼ', meaning: 'ibu'},
+            {char: '父', reading: 'ちち / ふ', meaning: 'ayah'},
+            {char: '兄', reading: 'あに / きょう', meaning: 'kakak laki-laki'},
+            {char: '弟', reading: 'おとうと / てい', meaning: 'adik laki-laki'},
+            {char: '姉', reading: 'あね / し', meaning: 'kakak perempuan'},
+            {char: '妹', reading: 'いもうと / まい', meaning: 'adik perempuan'},
+            {char: '友', reading: 'とも / ゆう', meaning: 'teman'},
+            {char: '体', reading: 'からだ / たい', meaning: 'tubuh'},
+            {char: '毛', reading: 'け / もう', meaning: 'rambut / bulu'},
+            {char: '色', reading: 'いろ / しき', meaning: 'warna'},
+            {char: '白', reading: 'しろ / はく', meaning: 'putih'},
+            {char: '黒', reading: 'くろ / こく', meaning: 'hitam'},
+            {char: '赤', reading: 'あか / せき', meaning: 'merah'},
+            {char: '青', reading: 'あお / せい', meaning: 'biru'},
+            {char: '緑', reading: 'みどり / りょく', meaning: 'hijau'}
+        ];
+
+        // DOM Elements
+        const loadingScreen = document.getElementById('loadingScreen');
+        const searchBox = document.getElementById('searchBox');
+        const kanjiGrid = document.getElementById('kanjiGrid');
+        const quizMode = document.getElementById('quizMode');
+        const statsSection = document.getElementById('stats');
+        const pointsSystem = document.getElementById('pointsSystem');
+
+        const totalPointsDisplay = document.getElementById('totalPoints');
+        const currentStreakDisplay = document.getElementById('currentStreak');
+        const playerLevelDisplay = document.getElementById('playerLevel');
+        const levelDisplayCard = playerLevelDisplay.closest('.level-display');
+
+        const quizKanjiDisplay = document.getElementById('quizKanji');
+        const answerInput = document.getElementById('answerInput');
+        const quizOptionsDiv = document.getElementById('quizOptions');
+        const submitAnswerBtn = document.getElementById('submitAnswerBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        const quizEndBtn = document.getElementById('quizEndBtn');
+        const quizScoreDisplay = document.getElementById('quizScore');
+        const resetProgressBtn = document.getElementById('resetProgressBtn');
+
+        // Quiz State Variables (now loaded from localStorage)
+        let currentQuizIndex = 0;
+        let quizCurrentScore = 0;
+        let isTypingQuiz = false;
+        let currentQuizData = [];
+
+        // Global State Variables (persisted)
+        let totalQuizzesCompleted = 0; 
+        let correctAnswersCount = 0;
+        let totalPoints = 0;
+        let currentStreak = 0;
+        let maxStreak = 0;
+        let playerLevel = 1;
+        let totalAnsweredQuestions = 0; 
+
+        // Audio Elements
+        // ====================================================================================================
+        // BARIS UNTUK MENGISI PATH FILE AUDIO ANDA:
+        // Ganti 'sounds/correct.mp3' dengan path yang benar ke file MP3 untuk jawaban BENAR Anda.
+        // Contoh: 'correct.mp3' jika di folder yang sama, atau 'audio/correct.mp3' jika di subfolder 'audio'.
+        const correctSound = new Audio('sounds/correct.mp3'); 
+        
+        // Ganti 'sounds/incorrect.mp3' dengan path yang benar ke file MP3 untuk jawaban SALAH Anda.
+        // Contoh: 'incorrect.mp3' jika di folder yang sama, atau 'audio/incorrect.mp3' jika di subfolder 'audio'.
+        const incorrectSound = new Audio('sounds/incorrect.mp3'); 
+        // ====================================================================================================
+
+        // --- Local Storage Functions ---
+        function saveProgress() {
+            const progress = {
+                totalQuizzesCompleted,
+                correctAnswersCount,
+                totalPoints,
+                currentStreak,
+                maxStreak,
+                playerLevel,
+                totalAnsweredQuestions
+            };
+            localStorage.setItem('xamzJapaneseProgress', JSON.stringify(progress));
+        }
+
+        function loadProgress() {
+            const savedProgress = localStorage.getItem('xamzJapaneseProgress');
+            if (savedProgress) {
+                const progress = JSON.parse(savedProgress);
+                totalQuizzesCompleted = progress.totalQuizzesCompleted || 0;
+                correctAnswersCount = progress.correctAnswersCount || 0;
+                totalPoints = progress.totalPoints || 0;
+                currentStreak = progress.currentStreak || 0;
+                maxStreak = progress.maxStreak || 0;
+                playerLevel = progress.playerLevel || 1;
+                totalAnsweredQuestions = progress.totalAnsweredQuestions || 0;
+            }
+        }
+
+        function resetProgress() {
+            if (confirm('Apakah Anda yakin ingin mereset semua progres belajar Anda? Ini tidak bisa dibatalkan!')) {
+                localStorage.removeItem('xamzJapaneseProgress');
+                totalQuizzesCompleted = 0;
+                correctAnswersCount = 0;
+                totalPoints = 0;
+                currentStreak = 0;
+                maxStreak = 0;
+                playerLevel = 1;
+                totalAnsweredQuestions = 0;
+                updatePointsDisplay();
+                updateStats();
+                alert('Progres telah direset!');
+                showView('kanjiGrid'); // Go back to main view
+            }
+        }
+
+        // --- Utility Functions ---
+
+        function hideLoadingScreen() {
+            loadingScreen.classList.add('hidden');
+            loadingScreen.addEventListener('transitionend', () => {
+                loadingScreen.remove();
+            }, { once: true });
+        }
+
+        function updatePointsDisplay() {
+            totalPointsDisplay.textContent = totalPoints;
+            currentStreakDisplay.textContent = currentStreak;
+            updateLevel(); 
+            saveProgress(); // Save progress whenever points/streak/level update
+        }
+
+        function updateLevel() {
+            // Leveling up every 100 points
+            const newLevel = Math.floor(totalPoints / 100) + 1; 
+            if (newLevel > playerLevel) {
+                playerLevel = newLevel;
+                playerLevelDisplay.textContent = `Level ${playerLevel}`;
+                levelDisplayCard.classList.add('level-up-animation');
+                setTimeout(() => {
+                    levelDisplayCard.classList.remove('level-up-animation');
+                }, 1000);
+            } else {
+                playerLevelDisplay.textContent = `Level ${playerLevel}`;
+            }
+        }
+
+        function showPointsAnimation(points, targetElement) {
+            const animationDiv = document.createElement('div');
+            animationDiv.textContent = (points > 0 ? '+' : '') + points;
+            animationDiv.classList.add('points-animation');
+            if (points < 0) {
+                animationDiv.classList.add('negative');
+            }
+            // Append to body or a specific container for better positioning
+            document.body.appendChild(animationDiv); 
+
+            // Position the animation near the target element
+            const rect = targetElement.getBoundingClientRect();
+            animationDiv.style.left = `${rect.left + rect.width / 2}px`;
+            animationDiv.style.top = `${rect.top + rect.height / 2}px`;
+
+            animationDiv.addEventListener('animationend', () => {
+                animationDiv.remove();
+            });
+        }
+
+        function displayKanji(kanjiList = kanjiData) {
+            kanjiGrid.innerHTML = '';
+            
+            kanjiList.forEach(kanji => {
+                const card = document.createElement('div');
+                card.className = 'kanji-card';
+                card.innerHTML = `
+                    <div class="kanji-character">${kanji.char}</div>
+                    <div class="kanji-reading">${kanji.reading}</div>
+                    <div class="kanji-meaning">${kanji.meaning}</div>
+                `;
+                kanjiGrid.appendChild(card);
+            });
+        }
+
+        function searchKanji() {
+            const searchTerm = searchBox.value.toLowerCase();
+            const filteredKanji = kanjiData.filter(kanji => 
+                kanji.meaning.toLowerCase().includes(searchTerm) ||
+                kanji.reading.toLowerCase().includes(searchTerm) ||
+                kanji.char.toLowerCase().includes(searchTerm) // Allow searching by kanji character
+            );
+            displayKanji(filteredKanji);
+        }
+
+        function updateStats() {
+            document.getElementById('totalKanji').textContent = kanjiData.length;
+            document.getElementById('correctAnswers').textContent = correctAnswersCount;
+            document.getElementById('totalQuizzes').textContent = totalQuizzesCompleted;
+            document.getElementById('totalPoints2').textContent = totalPoints; 
+            document.getElementById('maxStreak').textContent = maxStreak; 
+            
+            const accuracy = totalAnsweredQuestions > 0 ? Math.round((correctAnswersCount / totalAnsweredQuestions) * 100) : 0;
+            document.getElementById('accuracy').textContent = accuracy + '%';
+            saveProgress(); // Save stats when updated
+        }
+
+        // --- View Management Functions ---
+
+        function showView(viewId) {
+            kanjiGrid.style.display = 'none';
+            quizMode.style.display = 'none';
+            statsSection.style.display = 'none';
+            searchBox.style.display = 'none';
+            pointsSystem.style.display = 'flex'; 
+
+            switch (viewId) {
+                case 'kanjiGrid':
+                    kanjiGrid.style.display = 'grid';
+                    searchBox.style.display = 'block';
+                    displayKanji();
+                    break;
+                case 'quizMode':
+                    quizMode.style.display = 'block';
+                    break;
+                case 'stats':
+                    statsSection.style.display = 'grid';
+                    pointsSystem.style.display = 'none'; 
+                    updateStats();
+                    break;
+            }
+            updatePointsDisplay();
+        }
+
+        // --- Quiz Functions ---
+
+        function startQuiz(isTyping = false) {
+            isTypingQuiz = isTyping;
+            currentQuizIndex = 0;
+            quizCurrentScore = 0;
+            // Shuffle kanji data for a new quiz session
+            currentQuizData = [...kanjiData].sort(() => Math.random() - 0.5); 
+            
+            showView('quizMode');
+            quizEndBtn.style.display = 'none'; 
+            nextBtn.style.display = 'none'; // Hide next button initially
+
+            showQuestion(); // Panggil showQuestion untuk menampilkan pertanyaan pertama
+        }
+
+        function showQuestion() {
+            nextBtn.style.display = 'none'; // Sembunyikan tombol next saat pertanyaan baru muncul
+            quizKanjiDisplay.classList.remove('correct', 'incorrect'); // Hapus kelas animasi sebelumnya
+
+            if (currentQuizIndex >= currentQuizData.length) {
+                endQuiz();
+                return;
+            }
+
+            const currentKanji = currentQuizData[currentQuizIndex];
+            quizKanjiDisplay.textContent = currentKanji.char;
+            quizScoreDisplay.textContent = `Skor: ${quizCurrentScore}/${currentQuizIndex}`;
+            
+            if (isTypingQuiz) {
+                answerInput.value = '';
+                answerInput.style.display = 'block'; // Tampilkan input teks
+                answerInput.disabled = false;
+                submitAnswerBtn.style.display = 'block'; // Tampilkan tombol submit
+                submitAnswerBtn.disabled = false;
+                quizOptionsDiv.style.display = 'none'; // Sembunyikan opsi pilihan ganda
+            } else {
+                answerInput.style.display = 'none'; // Sembunyikan input teks
+                submitAnswerBtn.style.display = 'none'; // Sembunyikan tombol submit
+                quizOptionsDiv.style.display = 'grid'; // Tampilkan opsi pilihan ganda
+                generateMultipleChoiceOptions(currentKanji);
+            }
+        }
+
+        function generateMultipleChoiceOptions(currentKanji) {
+            const options = [currentKanji.meaning];
+            while (options.length < 4) {
+                const randomKanji = kanjiData[Math.floor(Math.random() * kanjiData.length)];
+                if (!options.includes(randomKanji.meaning) && randomKanji.meaning !== currentKanji.meaning) {
+                    options.push(randomKanji.meaning);
+                }
+            }
+            
+            options.sort(() => Math.random() - 0.5);
+            
+            quizOptionsDiv.innerHTML = '';
+            options.forEach(option => {
+                const btn = document.createElement('button');
+                btn.className = 'option-btn';
+                btn.textContent = option;
+                btn.addEventListener('click', () => handleMultipleChoiceAnswer(btn, option, currentKanji));
+                quizOptionsDiv.appendChild(btn);
+            });
+        }
+
+        function handleMultipleChoiceAnswer(selectedBtn, selectedAnswer, currentKanji) {
+            const allOptionBtns = quizOptionsDiv.querySelectorAll('.option-btn');
+            allOptionBtns.forEach(b => b.disabled = true); // Disable all buttons after selection
+
+            totalAnsweredQuestions++; 
+
+            if (selectedAnswer === currentKanji.meaning) {
+                selectedBtn.classList.add('correct');
+                quizKanjiDisplay.classList.add('correct'); // Tambahkan kelas untuk animasi benar
+                quizCurrentScore++;
+                correctAnswersCount++;
+                totalPoints += 10; 
+                currentStreak++;
+                if (currentStreak > maxStreak) {
+                    maxStreak = currentStreak;
+                }
+                showPointsAnimation(10, pointsSystem);
+                // Memutar audio benar
+                if (correctSound.src) { // Hanya putar jika src tidak kosong
+                    correctSound.play(); 
+                }
+            } else {
+                selectedBtn.classList.add('incorrect');
+                quizKanjiDisplay.classList.add('incorrect'); // Tambahkan kelas untuk animasi salah
+                allOptionBtns.forEach(b => {
+                    if (b.textContent === currentKanji.meaning) {
+                        b.classList.add('correct'); // Highlight correct answer
+                    }
+                });
+                totalPoints -= 5; 
+                if (totalPoints < 0) totalPoints = 0; 
+                currentStreak = 0; 
+                showPointsAnimation(-5, pointsSystem);
+                // Memutar audio salah
+                if (incorrectSound.src) { // Hanya putar jika src tidak kosong
+                    incorrectSound.play(); 
+                }
+
+                // Optional: Show alert for incorrect answer
+                // alert(`Salah! Jawaban yang benar adalah: ${currentKanji.meaning} (${currentKanji.reading})`);
+            }
+            
+            updatePointsDisplay(); 
+            quizScoreDisplay.textContent = `Skor: ${quizCurrentScore}/${currentQuizIndex + 1}`; 
+            nextBtn.style.display = 'block'; // Tampilkan tombol "Pertanyaan Berikutnya"
+        }
+
+        function handleSubmitTypingAnswer() {
+            const userAnswer = answerInput.value.trim().toLowerCase();
+            const currentKanji = currentQuizData[currentQuizIndex];
+            const correctMeaning = currentKanji.meaning.toLowerCase();
+            const correctReadingParts = currentKanji.reading.toLowerCase().split(' / '); // Split readings
+
+            totalAnsweredQuestions++; 
+
+            answerInput.disabled = true;
+            submitAnswerBtn.disabled = true;
+
+            let isCorrect = false;
+            // Check if the user's answer matches the meaning or any part of the reading
+            if (userAnswer === correctMeaning || correctReadingParts.includes(userAnswer)) {
+                isCorrect = true;
+            }
+
+            if (isCorrect) {
+                quizKanjiDisplay.classList.add('correct');
+                quizCurrentScore++;
+                correctAnswersCount++;
+                totalPoints += 10; 
+                currentStreak++;
+                if (currentStreak > maxStreak) {
+                    maxStreak = currentStreak;
+                }
+                showPointsAnimation(10, pointsSystem);
+                // Memutar audio benar
+                if (correctSound.src) { // Hanya putar jika src tidak kosong
+                    correctSound.play(); 
+                }
+            } else {
+                quizKanjiDisplay.classList.add('incorrect');
+                totalPoints -= 5; 
+                if (totalPoints < 0) totalPoints = 0; 
+                currentStreak = 0; 
+                showPointsAnimation(-5, pointsSystem);
+                // Memutar audio salah
+                if (incorrectSound.src) { // Hanya putar jika src tidak kosong
+                    incorrectSound.play(); 
+                }
+
+                // Optional: Show alert for incorrect answer
+                alert(`Salah! Jawaban yang benar adalah: ${currentKanji.meaning} (${currentKanji.reading})`);
+            }
+            
+            updatePointsDisplay(); 
+            quizScoreDisplay.textContent = `Skor: ${quizCurrentScore}/${currentQuizIndex + 1}`; 
+            nextBtn.style.display = 'block'; // Tampilkan tombol "Pertanyaan Berikutnya"
+        }
+
+        function nextQuestion() {
+            currentQuizIndex++;
+            showQuestion();
+        }
+
+        function endQuiz() {
+            alert(`Kuis selesai! Skor akhir: ${quizCurrentScore}/${currentQuizData.length}`);
+            totalQuizzesCompleted++;
+            updateStats();
+            quizKanjiDisplay.textContent = 'Kuis Selesai!';
+            quizOptionsDiv.innerHTML = ''; 
+            quizEndBtn.style.display = 'block'; 
+            nextBtn.style.display = 'none';
+
+            // Sembunyikan elemen input dan submit jika kuis berakhir
+            answerInput.style.display = 'none';
+            submitAnswerBtn.style.display = 'none';
+            quizOptionsDiv.style.display = 'none'; // Pastikan opsi juga tersembunyi
+        }
+
+        // --- Event Listeners ---
+
+        document.addEventListener('DOMContentLoaded', () => {
+            // Preload audio files
+            correctSound.load();
+            incorrectSound.load();
+
+            loadProgress(); // Load saved progress on startup
+            // Simulate loading time for the loading screen
+            setTimeout(() => {
+                hideLoadingScreen();
+                showView('kanjiGrid'); // Show kanji grid by default after loading
+                updatePointsDisplay(); 
+                updateStats(); 
+            }, 3000); // Adjust loading time as needed
+        });
+
+        searchBox.addEventListener('keyup', searchKanji);
+
+        document.getElementById('showAllKanjiBtn').addEventListener('click', () => showView('kanjiGrid'));
+        document.getElementById('startQuizBtn').addEventListener('click', () => startQuiz(false)); // Multiple choice
+        document.getElementById('startTypingQuizBtn').addEventListener('click', () => startQuiz(true)); // Typing quiz
+        document.getElementById('showStatsBtn').addEventListener('click', () => showView('stats'));
+        resetProgressBtn.addEventListener('click', resetProgress);
+
+        submitAnswerBtn.addEventListener('click', handleSubmitTypingAnswer);
+        answerInput.addEventListener('keyup', (event) => {
+            if (event.key === 'Enter' && isTypingQuiz && !answerInput.disabled) { // Prevent multiple submissions
+                handleSubmitTypingAnswer();
+            }
+        });
+        nextBtn.addEventListener('click', nextQuestion);
+        quizEndBtn.addEventListener('click', () => showView('kanjiGrid'));
+
+    </script>
+</body>
+</html>
